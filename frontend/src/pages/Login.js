@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Add axios to make HTTP requests
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -7,16 +8,26 @@ function Login() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Hardcoded credentials for testing
-    if (email === 'admin@gmail.com' && password === 'password') {
-      navigate('/dashboard');
-    } else {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, password });
+    
+      console.log('Response Data:', response.data);
+    
+      if (response.data.token && response.data.role) {
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('role', response.data.role);
+        navigate('/dashboard');
+      } else {
+        setError('Invalid credentials!');
+      }
+    } catch (error) {
+      console.error('Login Error:', error.response ? error.response.data : error.message);
       setError('Invalid credentials!');
-    }
+    }    
   };
-
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-500">
       <div className="bg-white p-8 rounded-xl shadow-lg w-full sm:w-96">

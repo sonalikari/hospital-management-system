@@ -16,8 +16,8 @@ const addNewUser = async () => {
     await mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true });
 
     const newUser = {
-        email: "testuser@example.com",
-        password: "newpassword", // Plain password
+        email: "hospital_manager@xyz.com",
+        password: "Password@2025", // Plain password
         role: "manager"
     };
 
